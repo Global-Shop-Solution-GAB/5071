@@ -1,0 +1,398 @@
+Program.Sub.ScreenSU.Start
+Gui.SS_Form1..Create
+Gui.SS_Form1..Caption("Build Positive Pay Check File")
+Gui.SS_Form1..Size(4125,3855)
+Gui.SS_Form1..Position(0,0)
+Gui.SS_Form1..ForeColor(0)
+Gui.SS_Form1..Backcolor(-2147483633)
+Gui.SS_Form1..MaxButton(False)
+Gui.SS_Form1..MinButton(False)
+Gui.SS_Form1..MousePointer(0)
+Gui.SS_Form1..Sizeable(False)
+Gui.SS_Form1..Event(UnLoad,SS_Form1_Unload)
+Gui.SS_Form1..MinX(0)
+Gui.SS_Form1..MinY(0)
+Gui.SS_Form1.lbl_dtpBeg.Create(label,"Beginning Check Date",True,1800,195,1,105,135,True,0,"Arial",8,-2147483633,0)
+Gui.SS_Form1.lbl_dtpBeg.LabelStretch(True)
+Gui.SS_Form1.dtpBeg.Create(datepicker)
+Gui.SS_Form1.dtpBeg.Size(1800,345)
+Gui.SS_Form1.dtpBeg.Position(100,335)
+Gui.SS_Form1.dtpBeg.TabStop(True)
+Gui.SS_Form1.dtpBeg.TabIndex(1)
+Gui.SS_Form1.dtpBeg.DefaultValue("")
+Gui.SS_Form1.lbl_dtpEnd.Create(label,"Ending Check Date",True,1800,200,1,1985,135,True,0,"Arial",8,-2147483633,0)
+Gui.SS_Form1.lbl_dtpEnd.LabelStretch(True)
+Gui.SS_Form1.dtpEnd.Create(datepicker)
+Gui.SS_Form1.dtpEnd.Size(1800,345)
+Gui.SS_Form1.dtpEnd.Position(1985,335)
+Gui.SS_Form1.dtpEnd.TabStop(True)
+Gui.SS_Form1.dtpEnd.TabIndex(2)
+Gui.SS_Form1.dtpEnd.DefaultValue("")
+Gui.SS_Form1.lbl_ddlBAN.Create(label,"Bank Account Number",True,1800,200,1,100,850,True,0,"Arial",8,-2147483633,0)
+Gui.SS_Form1.lbl_ddlBAN.LabelStretch(True)
+Gui.SS_Form1.lbl_txtFilePath.Create(label,"Full Path For File Creation",True,2385,195,1,105,1725,True,0,"Arial",8,-2147483633,0)
+Gui.SS_Form1.lbl_txtFilePath.LabelStretch(True)
+Gui.SS_Form1.txtFilePath.Create(textbox,"",True,3645,300,1,120,1920,True,0,"Arial",8,16777215,1)
+Gui.SS_Form1.txtFilePath.Text("")
+Gui.SS_Form1.txtFilePath.TabStop(True)
+Gui.SS_Form1.txtFilePath.TabIndex(6)
+Gui.SS_Form1.txtFilePath.DefaultValue("")
+Gui.SS_Form1.cmdOK.Create(button)
+Gui.SS_Form1.cmdOK.Caption("OK")
+Gui.SS_Form1.cmdOK.Size(1125,345)
+Gui.SS_Form1.cmdOK.Position(135,2535)
+Gui.SS_Form1.cmdOK.FontSize(7)
+Gui.SS_Form1.cmdOK.TabStop(True)
+Gui.SS_Form1.cmdOK.TabIndex(13)
+Gui.SS_Form1.cmdOK.DefaultValue("")
+Gui.SS_Form1.cmdOK.Event(Click,cmdOK_Click)
+Gui.SS_Form1.txtBAN.Create(TextBox,"485010366317",True,1770,300,0,120,1065,True,0,"Arial",8,-2147483643,1)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+'Created by RAN
+'Customer - CALWeld
+V.Local.sError.Declare(String)
+
+f.ODBC.Connection!Con.OpenConnection(v.Ambient.PDSN,v.Ambient.PUser,v.Ambient.PPass)
+
+'Gui.SS_Form1.txtFilePath.Text(v.Caller.FilesDir)
+Gui.SS_Form1.txtFilePath.Text("\\fileshare64\finance\PosPay\Auto")
+Gui.SS_Form1..Show
+
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+f.Intrinsic.UI.CloseWaitDialog 
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,=,213)
+	f.Intrinsic.UI.Msgbox("Cannot move file, file not found","ERROR")
+F.Intrinsic.Control.elseIf(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_PDA_PossitivePay.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+Program.Sub.SS_Form1_Unload.Start
+F.Intrinsic.Control.SetErrorHandler("SS_Form1_Unload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+f.ODBC.Connection!Con.Close
+f.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("SS_Form1_Unload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_AP0808PositivePayCert.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End
+
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.SS_Form1_Unload.End
+
+Program.Sub.cmdOK_Click.Start
+F.Intrinsic.Control.SetErrorHandler("cmdOK_Click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSQL.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.iCount.Declare(Long,0)
+V.Local.sTotal_Amt.Declare(String)
+V.Local.sCount_Amt.Declare(String)
+V.Local.sAmount.Declare(String)
+V.Local.dDate.Declare(Date)
+V.Local.sLine.Declare(String)
+V.Local.iPositions.Declare(Long)
+V.Local.iAlign.Declare(Long)
+V.Local.sHead.Declare(String)
+V.Local.sVoid.Declare(String)
+V.Local.sDetail.Declare(String)
+V.Local.sFile.Declare(String)
+V.Local.sFileName.Declare(String)
+v.Local.sCheck.Declare(string)
+V.Local.iHash.Declare(long,0)
+v.Local.sTrail.Declare(string)
+V.Local.iTemp.Declare(long)
+v.Local.fTotal_Amt.Declare(float)
+v.Local.lRet.Declare(long)
+v.Local.sContentBatFile.Declare 
+v.Local.sMsg.Declare 
+v.Local.bRet.Declare 
+V.Local.sdate.Declare 
+V.Local.sdate1.Declare 
+
+Gui.SS_Form1..Visible(false)
+
+
+
+'F.Intrinsic.Debug.InvokeDebugger
+'
+'F.Intrinsic.Debug.Stop
+
+
+f.Intrinsic.UI.InvokeWaitDialog("Upload in Progress...")
+
+'if the beginning date is less than the ending date. create the file
+F.Intrinsic.Control.If(V.Screen.SS_Form1!dtpBeg.Value,<=,V.Screen.SS_Form1!dtpEnd.Value)
+	f.Intrinsic.String.Build("SELECT CK_NO, AMOUNT, CK_DATE,CK_OR_VOID, PAYEE FROM V_CHECKS_LOG AS CHECKS LEFT JOIN V_VENDOR_PAY_TO AS VEND ON CHECKS.VEND_NO = VEND.VENDOR WHERE (CK_DATE BETWEEN '{0}' AND '{1}' ) ORDER BY CK_NO ASC, CK_DATE ASC",V.Screen.SS_Form1!dtpBeg.Value.pervasivedate,V.Screen.SS_Form1!dtpEnd.Value.pervasivedate,V.Local.sSQL)
+	F.ODBC.Connection!Con.OpenLocalRecordsetRO("rst",v.Local.sSQL)
+	f.Intrinsic.Control.If(v.ODBC.Con!rst.EOF,=,false)
+		f.Intrinsic.UI.InvokeWaitDialog("Upload in Progress...")
+
+		'start formatting the header
+'		F.Intrinsic.String.Split("3*!*4*!*10*!*8*!*1*!*8*!*1*!*45","*!*",v.Local.iPositions)
+'		F.Intrinsic.String.Split("1*!*0*!*0*!**!*0*!**!*0*!*0","*!*",v.Local.iAlign)
+		F.Intrinsic.String.Split("12*!*23*!*8*!*69","*!*",v.Local.iPositions)
+		F.Intrinsic.String.Split("11*!*0*!*0*!*0","*!*",v.Local.iAlign)
+		'if the check box is clicke set check to y
+		f.Intrinsic.Control.If(v.Screen.SS_Form1!chkCert.Value,=,1)
+			v.Local.sCheck.Set("Y")
+		f.Intrinsic.Control.Else
+			v.Local.sCheck.Set("N")
+		f.Intrinsic.Control.EndIf
+'		F.Intrinsic.String.Build("DRS*!*{0}*!*{1}*!*{2}*!**!*{3}*!*{4}*!*",V.Screen.SS_Form1!txtBN.Text,V.Screen.SS_Form1!txtBAN.Text,V.Ambient.Date.FormatYYYYMMDD,v.Screen.SS_Form1!dtpCutoff.Value.FormatYYYYMMDD,v.Local.sCheck,V.Local.sLine)
+		F.Intrinsic.String.Build("{0}*!*{1}*!*{2}*!*",V.Screen.SS_Form1!txtBAN.Text,"H",V.Ambient.Date.FormatYYYYMMDD,V.Local.sLine)
+		F.Intrinsic.String.Split(V.Local.sLine,"*!*",v.Local.sLine)
+		'positional string for header
+		F.Intrinsic.String.PositionalString(v.Local.sLine,v.Local.iPositions,v.Local.iAlign,v.Local.sHead)
+
+		'start formatting the details
+		v.Local.sLine.Redim(0,0)
+		v.Local.iPositions.Redim(0,0)
+		v.Local.iAlign.Redim(0,0)
+		F.Intrinsic.Control.DoUntil(v.ODBC.Con!rst.EOF,=,True)
+			f.Intrinsic.Math.Add(v.Local.iCount,1,v.Local.iCount)
+'			F.Intrinsic.String.Split("10*!*10*!*10*!*6*!*1*!*43","*!*",v.Local.iPositions)
+'			F.Intrinsic.String.Split("11*!*11*!*0*!**!*1*!*0","*!*",v.Local.iAlign)
+			F.Intrinsic.String.Split("12*!*1*!*10*!*12*!*9*!*66","*!*",v.Local.iPositions)
+			F.Intrinsic.String.Split("11*!*0*!*11*!*11*!*0*!*0","*!*",v.Local.iAlign)
+			F.Intrinsic.Control.If(v.ODBC.Con!rst.FieldValTrim!CK_OR_VOID,=,"V")
+				V.Local.sVoid.Set("V")
+				V.Local.sAmount.Set("")
+			F.Intrinsic.Control.Else
+				V.Local.sVoid.Set("O")
+				F.Intrinsic.String.Format(v.ODBC.Con!rst.FieldValTrim!AMOUNT,"#0.00",V.Local.sAmount)
+				F.Intrinsic.String.Replace(v.Local.sAmount,".","",v.Local.sAmount)
+				f.Intrinsic.Math.Add(v.ODBC.Con!rst.FieldValFloat!AMOUNT,v.Local.fTotal_Amt,v.Local.fTotal_Amt)
+			F.Intrinsic.Control.EndIf
+			V.Local.dDate.Set(v.ODBC.Con!rst.FieldValTrim!CK_DATE)
+			F.Intrinsic.String.Build("{0}*!*{1}*!*{2}*!*{3}*!*{4}*!*{5}",V.Screen.SS_Form1!txtBAN.Text,v.Local.sVoid,v.ODBC.Con!rst.FieldValTrim!CK_NO,V.Local.sAmount,V.Local.dDate.FormatMMDDYY,v.ODBC.Con!rst.FieldValTrim!PAYEE,v.Local.sLine)
+			F.Intrinsic.String.Split(v.Local.sLine,"*!*",v.Local.sLine)
+			'positional string
+			F.Intrinsic.String.PositionalString(v.Local.sLine,v.Local.iPositions,v.Local.iAlign,v.Local.sDetail)
+			'add in a new line before each line
+			F.Intrinsic.String.Build("{0}{1}{2}",v.Local.sRet,v.Ambient.NewLine,v.Local.sDetail,v.Local.sRet)
+			'add hash (sum of check numbers)
+'			v.Local.iTemp.Set(v.ODBC.Con!rst.FieldVal!CK_NO)
+'			f.Intrinsic.Math.Add(v.Local.iTemp,v.Local.iHash,v.Local.iHash)
+			F.ODBC.Con!rst.MoveNext
+		F.Intrinsic.Control.Loop
+
+		'Start formatting trailer record
+		v.Local.sLine.Redim(0,0)
+		v.Local.iPositions.Redim(0,0)
+		v.Local.iAlign.Redim(0,0)
+		f.ODBC.Con!rst.Requery
+'		F.Intrinsic.String.Split("4*!*1*!*5*!*20*!*10*!*10*!*2*!*28","*!*",v.Local.iPositions)
+'		F.Intrinsic.String.Split("0*!*0*!*11*!*0*!*11*!*11*!*0*!*0","*!*",v.Local.iAlign)
+		F.Intrinsic.String.Split("12*!*1*!*10*!*12*!*75","*!*",v.Local.iPositions)
+		F.Intrinsic.String.Split("11*!*0*!*11*!*11*!*0","*!*",v.Local.iAlign)
+		F.Intrinsic.String.Format(v.Local.fTotal_Amt,"#0.00",V.Local.sAmount)
+		F.Intrinsic.String.Replace(v.Local.sAmount,".","",v.Local.sAmount)
+'		f.Intrinsic.String.Build("1EOF*!**!*{0}*!**!*{1}*!*{2}*!**!*",v.Local.iCount,V.Local.iHash,V.Local.sAmount,V.Local.sLine)
+		f.Intrinsic.String.Build("{0}*!*{1}*!*{2}*!*{3}*!*",V.Screen.SS_Form1!txtBAN.Text,"T",v.Local.iCount,V.Local.sAmount,V.Local.sLine)
+		F.Intrinsic.String.Split(v.Local.sLine,"*!*",v.Local.sLine)
+		f.Intrinsic.String.PositionalString(v.Local.sLine,v.Local.iPositions,v.Local.iAlign,v.Local.sTrail)
+		'add trail to end of ret and head to the beginning of ret
+		f.Intrinsic.String.Build("{0}{1}{2}{3}",v.Local.sHead,v.Local.sRet,v.Ambient.NewLine,v.Local.sTrail,v.Local.sRet)
+
+		'create file name
+'		f.Intrinsic.String.Build("PAYS{0}.TXT",v.Ambient.Date.FormatDDMMYY,V.Local.sFileName)
+'		f.Intrinsic.String.Build("{0}\{1}",v.Screen.SS_Form1!txtFilePath.Text,V.Local.sFileName,v.Local.sFile)
+		
+		
+'F.Intrinsic.Debug.InvokeDebugger
+'
+'F.Intrinsic.Debug.Stop
+
+		Function.Intrinsic.String.Format (V.Ambient.Date,"YYYYDDMM",V.Local.sdate)
+		Function.Intrinsic.String.Format (V.Ambient.Time,"HHNNSS",V.Local.sdate1)
+		f.Intrinsic.String.Build("PAYS{0} {1}.TXT",V.Local.sdate,V.Local.sdate1,V.Local.sFileName)
+		f.Intrinsic.String.Build("{0}\{1}",v.Screen.SS_Form1!txtFilePath.Text,V.Local.sFileName,v.Local.sFile)
+	
+	
+		'write string to file
+		f.Intrinsic.File.String2File(v.Local.sFile,v.Local.sRet)
+'		'build and display message box telling the user how many records were saved and where it was saved with the name of the file
+'		f.Intrinsic.String.Build("{0} Records were written to{1}{2}",v.Local.iCount,v.Ambient.NewLine,v.Local.sFile,v.Local.sHead)
+''		f.Intrinsic.UI.Msgbox(v.Local.sHead,"Positive Pay File Data")
+
+		gui.SS_Form1.txtFilePath.Text(v.Local.sFile)
+		' File Tranfer starts here
+		f.Intrinsic.Control.CallSub(filetransfer,"FileName",V.Local.sFileName)
+
+		f.Intrinsic.Control.CallSub(ss_form1_unload)
+
+	'there are no records matching the criteria
+	f.Intrinsic.Control.Else
+		f.Intrinsic.String.Build("There are no records for date range: {0} - {1}",V.Screen.SS_Form1!dtpBeg.Value,V.Screen.SS_Form1!dtpEnd.Value,v.Local.sHead)
+		f.Intrinsic.UI.Msgbox(v.Local.sHead,"No Records")
+	f.Intrinsic.Control.EndIf
+
+
+'beginning date is greater than the end date. tell them.
+f.Intrinsic.Control.Else
+	f.Intrinsic.UI.Msgbox("Beginning Date is Greater than the Ending Date","Error")
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.UI.CloseWaitDialog 
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdOK_Click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_AP0808PositivePayCert.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.CallSub(ss_form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.cmdOK_Click.End
+
+Program.Sub.FileTransfer.Start
+F.Intrinsic.Control.SetErrorHandler("FileTransfer")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.sFile.Declare 
+V.Local.sFileName.Declare 
+v.Local.sTRFileName.Declare 
+V.Local.sSRFileName.Declare 
+V.Local.dtBeforeTransfer.Declare 
+V.Local.dtAfterTransfer.Declare 
+v.Local.lRet.Declare(long)
+
+V.Local.sTypes.Declare 
+V.Local.sRow.Declare  
+V.Local.sFieldNames.Declare 
+v.Local.sMsg.Declare 
+v.Local.sMsgTitle.Declare 
+V.Local.sdate.Declare 
+V.Local.sdate1.Declare 
+V.Local.sRetCode.Declare 
+v.Local.bRet.Declare 
+V.Local.i.Declare(long)
+V.Local.j.Declare(long)
+V.Local.sLogdata.Declare 
+V.Local.sLogFile.Declare 
+
+'F.Intrinsic.Debug.InvokeDebugger
+'
+'F.Intrinsic.Debug.Stop
+
+f.Intrinsic.UI.InvokeWaitDialog("SFTP in Progress")
+'
+		'Source file
+		V.Local.sSRFileName.Set(v.Screen.SS_Form1!txtFilePath.text)
+
+		'Captures Tranfer StartTime
+		V.Local.dtBeforeTransfer.Set(v.Ambient.Now)
+		F.Intrinsic.Task.LaunchSync("\\global-64\global\FILES\WinSCP_script\PosPayTransfer.bat")
+'		F.Intrinsic.Task.ShellExecSync(0,"Open","\\global-64\global\FILES\WinSCP_script\PosPayTransfer.bat","","",0)
+
+		'		Read SFTP Log File
+		V.Local.sLogFile.Set("\\global-64\global\FILES\WinSCP_script\WinSCP.log")
+
+		'F.Intrinsic.UI.Sleep(20)
+		'Wait until Tranfer is done
+		F.Intrinsic.Control.For(V.Local.i,1,10000,1)
+			f.Intrinsic.UI.ChangeWaitStatus("Transfer in progress",V.Local.i,1,20000)
+		f.Intrinsic.Control.Next(V.Local.i)
+
+		'Target File
+		f.Intrinsic.String.Build("\\fileshare64\finance\PosPay\Auto_Uploaded_Files\{0}",V.args.FileName,v.Local.sTRFileName)
+
+
+		'Read Last 4 lines of the log file.
+		F.Intrinsic.File.File2String(V.Local.sLogFile,V.Local.sRow)
+		F.Intrinsic.String.Split(V.Local.sRow,V.Ambient.NewLine,V.Local.sRow)
+		F.Intrinsic.Control.For(V.Local.i,V.Local.sRow.UBound,V.Local.sRow.lBound,-1)
+			f.Intrinsic.Math.Add(V.Local.j,1,V.Local.j)
+			f.Intrinsic.Control.If(V.Local.j,=,5)
+				f.Intrinsic.String.Build("{0}",V.Local.sRow(V.Local.i),V.Local.sLogdata)
+			f.Intrinsic.Control.endif
+		f.Intrinsic.Control.Next(V.Local.i)
+
+
+		V.Local.sFieldNames.Set("CLMN1*!*CLMN2*!*CLMN3*!*CLMN4*!*CLMN5*!*CLMN6*!*CLMN7")
+		V.Local.sTypes.Set("String*!*String*!*String*!*String*!*String*!*String*!*String")
+		F.Data.DataTable.CreateFromString("PAYExport",V.Local.sLogdata,V.Local.sFieldNames,V.Local.sTypes," ",v.Ambient.NewLine)
+
+		v.Local.lRet.Set(0)
+		'Read DateTIme
+		f.Intrinsic.String.Build("{0} {1}",v.datatable.PAYExport(v.Local.lRet).CLMN2.FieldValTrim,v.datatable.PAYExport(v.Local.lRet).CLMN3.FieldValTrim,V.Local.dtAfterTransfer)
+
+
+
+		'Compare BeforeDateTime & AfterDateTime to check  file was modified
+		f.Intrinsic.Control.If(V.Local.dtAfterTransfer,>,V.Local.dtBeforeTransfer)
+			V.Local.sRetCode.Set(v.datatable.PAYExport(v.Local.lRet).CLMN7.FieldValTrim)
+			'Retcode = 0 is Success
+			f.Intrinsic.Control.If(V.Local.sRetCode,<>,0,"OR",V.Local.sRetCode,=,v.Ambient.Null)
+				f.Intrinsic.String.Build("Note: See: {0}",v.Local.sLogFile,v.Local.sMsg)
+				v.Local.sMsgTitle.Set("File Failed to Upload")
+			f.Intrinsic.Control.else
+				f.Intrinsic.String.Build("File {0} was sent successfully",v.Local.sfile,v.Local.sMsg)
+				v.Local.sMsgTitle.Set("File Upload Success")
+
+				'if file already exist delete it
+				f.Intrinsic.File.Exists(v.Local.sTRFileName,v.Local.bRet)
+				f.Intrinsic.Control.If(v.Local.bRet,=,True)
+					f.Intrinsic.File.DeleteFile("v.Local.sTRFileName")
+				f.Intrinsic.Control.EndIf 
+				'Move upload file to uploaded folder
+				f.Intrinsic.File.MoveFile(v.Local.sSRFileName,v.Local.sTRFileName,v.Local.lRet)
+			f.Intrinsic.Control.EndIf
+		f.Intrinsic.Control.else
+			f.Intrinsic.String.Build("Unable to Read Log file, Please check {0} for Status",v.Local.sLogFile,v.Local.sMsg)
+			v.Local.sMsgTitle.Set("File Failed to Upload")
+		f.Intrinsic.Control.EndIf 
+
+		f.Intrinsic.UI.Msgbox(v.Local.sMsg,v.Local.sMsgTitle)
+		F.Data.DataTable.Close("PAYExport")
+
+		f.Intrinsic.UI.CloseWaitDialog
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("FileTransfer")
+f.Intrinsic.UI.CloseWaitDialog 
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,=,213)
+	f.Intrinsic.UI.Msgbox("Cannot move file, file not found","ERROR")
+F.Intrinsic.Control.elseIf(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_PDA_PossitivePay.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.FileTransfer.End
+
+Program.Sub.Comments.Start
+${$0$}$Possitive Pay$}$RAN$}$3/30/2018 1:16:57 PM$}$False
+Program.Sub.Comments.End
